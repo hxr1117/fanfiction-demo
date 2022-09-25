@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+<nav th:insert="fragments/header.html :: navibar"></nav>
+
+
+<!--Main Page-->
+<div class="container-fluid container">
+    <h1 th:text="'Welcome Back! ' + ${username}" class="text-center"></h1>
+    <div class="row g-5">
+        <div class="col-md-7 col-lg-6">
+            <!--Announcement-->
+            <h3 class="text-center">Announcements</h3>
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action" aria-current="true"
+                   th:each="announcement: ${announcements}"
+                th:href="@{/announcement/{id}(id=${announcement.getId()})}">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1" th:text="${announcement.getTitle()}"></h5>
+                        <small th:text="${announcement.getCreateTime()}" class="text-muted"></small>
+                    </div>
+                    <p class="mb-1 text-truncate" th:text="${announcement.getContent()}"></p>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-5 col-lg-6 text-center" th:if="${username != ''}">
+            <!--Works-->
+            <h3 class="">Manage Your Works</h3>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-action" th:href="@{/article/new}">
+                    Post an Article
+                </a>
+
+                <a class="list-group-item list-group-item-action" th:href="@{/article/user/{id}(id=${userId})}">
+                    Article Management
+                </a>
+
+                <a class="list-group-item list-group-item-action" th:href="@{/series/user/{id}(id=${userId})}">
+                    Series Management
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

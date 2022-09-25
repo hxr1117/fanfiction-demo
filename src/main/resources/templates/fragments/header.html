@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--Navigate Bar-->
+<nav class="p-3 text-bg-dark" style="user-select: auto;" th:fragment="navibar">
+    <div class="container" style="user-select: auto;">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
+             style="user-select: auto;">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
+               style="user-select: auto;">
+                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"
+                     style="user-select: auto;">
+                    <use xlink:href="#bootstrap" style="user-select: auto;"></use>
+                </svg>
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"
+                style="user-select: auto;">
+                <li style="user-select: auto;"><a th:href="@{/}" class="nav-link px-2 text-white"
+                                                  style="user-select: auto;">Home</a></li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" style="user-select: auto;"
+                  th:action="@{/article/search}" method="get">
+                <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..."
+                       aria-label="Search" style="user-select: auto;" th:name="title">
+            </form>
+
+            <div class="text-end" style="user-select: auto;" th:if="${session.username == '' || session.username == null }">
+                <a type="button" class="btn btn-outline-light me-2" style="user-select: auto;"
+                   th:href="@{/login}">Login</a>
+                <a type="button" class="btn btn-warning" style="user-select: auto;"
+                   th:href="@{/registration}">Sign-up</a>
+            </div>
+
+            <div class="text-end" style="user-select: auto;" th:unless="${session.username == '' || session.username == null }">
+                <!--                <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown"-->
+                <!--                        aria-expanded="false" th:text="${username}"></button>-->
+                <a href="/" th:href="@{/logout}" class="btn btn-warning" type="button">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Articles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+<nav th:insert="fragments/header.html :: navibar"></nav>
+
+<div class="container text-center">
+    <h2 th:text="${username}"></h2>
+    <h3>Articles</h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Operation</th>
+        </tr>
+        </thead>
+        <tbody th:each="article : ${articles}">
+        <tr>
+            <td th:text="${article.getTitle()}"></td>
+            <td>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="/" th:href="@{/article/{id}(id=${article.getId()})}"
+                       class="btn btn-sm btn-primary">Detail</a>
+                    <a href="/" class="btn btn-success btn-sm" th:href="@{/article/edit/{id}(id=${article.getId()})}">Edit</a>
+                    <a href="/" class="btn btn-danger btn-sm" th:href="@{/article/delete/{id}(id=${article.getId()})}">Delete</a>
+                </div>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>Series</h3>
+</div>
+</body>
+</html>
