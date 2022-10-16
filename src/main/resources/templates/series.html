@@ -10,36 +10,30 @@
 <nav th:insert="fragments/header.html :: navibar"></nav>
 
 <div class="container-sm">
-    <form action="#" th:action="@{/{path}(path=${action})}" method="post"
-          th:object="${series}">
-        <h2 th:if="${action} == 'new'">New Series</h2>
-        <h2 th:unless="${action} == 'new'" th:value="${series.getName()}"></h2>
-
-        <div class="mb-3">
-            <label for="name" class="form-label">Series Title</label>
-            <input th:value="*{name}" id="name" class="form-control" th:field="*{name}">
+    <h1 th:text="${series.getName()}" class="text-center"></h1>
+    <div class="text-muted text-center">
+        <div>
+            <a href="/" th:href="@{/user/{id}(id=${series.getUserId()})}" th:text="${author}"></a>
         </div>
-
-
-        <div class="mb-3">
-            <h3>Select Articles For this Series</h3>
-            <ul class="list-group">
-                <li class="list-group-item" th:each="article: ${articleList}">
-                    <input class="form-check-input me-3" type="checkbox" th:value="${article.getId()}"
-                           th:id="${article.getId()}"
-                           th:field="*{articleList}">
-                    <label class="form-check-label" th:for="${article.getId()}" th:text="${article.getTitle()}"></label>
-                </li>
-            </ul>
-
+        <div class="d-flex justify-content-evenly">
+            <div>
+                Created Time: [[${#dates.format(series.getUpdateTime(), 'yyyy-MM-dd HH:mm')}]]
+            </div>
+            <div>
+                Updated Time: [[${#dates.format(series.getUpdateTime(), 'yyyy-MM-dd HH:mm')}]]
+            </div>
         </div>
-
-        <div class="mb-3">
-            <button href="/" class="btn btn-primary" type="submit">Post</button>
-
+    </div>
+    <br>
+    <div class="container-fluid container">
+        <div class="row g-5">
+            <div class="list-group list-group-numbered">
+                <a href="#" class="list-group-item list-group-item-action"
+                   th:each="article: ${articleList.entrySet()}"
+                   th:href="@{/article/{id}(id=${article.getKey()})}" th:text="${article.getValue()}"></a>
+            </div>
         </div>
-    </form>
-
+    </div>
 </div>
 </body>
 </html>

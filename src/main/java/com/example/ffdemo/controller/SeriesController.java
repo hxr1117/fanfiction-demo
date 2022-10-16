@@ -1,10 +1,13 @@
 package com.example.ffdemo.controller;
 
+import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.dto.SeriesDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.model.Series;
+import com.example.ffdemo.model.User;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
+import com.example.ffdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/series")
@@ -22,10 +27,15 @@ public class SeriesController {
 
     @Autowired
     private ArticleService articleService;
+    @Autowired
+    private UserService userService;
 
-    public SeriesController(SeriesService service, ArticleService articleService) {
+    public SeriesController(SeriesService service,
+                            ArticleService articleService,
+                            UserService userService) {
         this.seriesService = service;
         this.articleService = articleService;
+        this.userService = userService;
     }
 
     public SeriesController() {
@@ -34,7 +44,9 @@ public class SeriesController {
     @GetMapping("/user/{userId}")
     public String getUserSeries(@PathVariable String userId, Model model) {
         List<Series> seriesList = (List<Series>) seriesService.getSeriesByUserId(userId);
+        String username = userService.getUsernameById(userId);
         model.addAttribute("seriesList", seriesList);
+        model.addAttribute("username", username);
         return "seriesList";
     }
 
@@ -47,14 +59,18 @@ public class SeriesController {
         model.addAttribute("series", new SeriesDto());
         model.addAttribute("articleList", articles);
 
-        return "series";
+        return "newSeries";
     }
 
     @PostMapping("/new")
     public String newSeriesSubmit(@ModelAttribute("series") SeriesDto seriesDto, HttpSession session) {
         String userId = (String) session.getAttribute("userId");
+        // TODO: Should I link the series to article?
         seriesDto.setUserId(userId);
-        seriesService.saveSeries(seriesDto);
+        Series series = seriesService.saveSeries(seriesDto);
+        List<String> articleList = (List<String>) seriesDto.getArticleList();
+
+        articleService.setSeriesId(series.getId(), articleList);
         return "redirect:/series/user/" + userId;
     }
 
@@ -83,7 +99,7 @@ public class SeriesController {
             model.addAttribute("articleList", articles);
             model.addAttribute("inSeries", inSeries);
 
-            return "series";
+            return "newSeries";
         }
         return "redirect:/series/user/" + userId;
     }
@@ -95,8 +111,54 @@ public class SeriesController {
             series.setName(seriesDto.getName());
             series.setArticleList(seriesDto.getArticleList());
             seriesService.saveSeries(seriesDto, id);
+            // Edit the series_id within articles instance
+            articleService.setSeriesId(id, (List<String>) seriesDto.getArticleList());
             return "redirect:/series/edit/" + id;
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/{id}")
+    public String detailPage(@PathVariable String id, Model model) {
+        if (seriesService.getSeriesById(id).isPresent()) {
+            Series series = seriesService.getSeriesById(id).get();
+            String username = userService.getUsernameById(series.getUserId());
+
+            Map<String, String> articleNames = new HashMap<>();
+            for (String articleId : series.getArticleList()) {
+                if (articleService.getArticleById(articleId).isPresent()) {
+                    articleNames.put(articleId, articleService.getArticleById(articleId).get().getTitle());
+                }
+            }
+
+            model.addAttribute("author", username);
+            model.addAttribute("series", series);
+            model.addAttribute("articleList", articleNames);
+            return "series";
+        }
+        return "redirect:/";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable String id) {
+        if (seriesService.getSeriesById(id).isPresent()) {
+            Series series = seriesService.getSeriesById(id).get();
+            articleService.setSeriesId("", (List<String>) series.getArticleList());
+        }
+        seriesService.deleteById(id);
+        return "redirect:/series/user/" + id;
+    }
+
+    @GetMapping("/search")
+    public String searchPage(Model model,
+                             @RequestParam(value = "title", required = false) String title,
+                             @RequestParam(value = "page", required = false) Integer page) {
+        title = title != null ? title : "";
+        page = page == null ? 0 : page;
+
+        List<Series> seriesList = seriesService.getAllSeries(title, page);
+        model.addAttribute("seriesList", seriesList);
+        model.addAttribute("search", title);
+        return "seriesList";
     }
 }

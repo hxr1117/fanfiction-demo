@@ -4,10 +4,13 @@ import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -39,8 +42,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticleByTitle(String title) {
-        return (List<Article>) articleRepository.findByTitleRegex(title);
+    public List<Article> getArticleByTitle(String title, Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return articleRepository.findByTitleRegex(title, pageable);
     }
 
     @Override
@@ -67,6 +71,9 @@ public class ArticleServiceImpl implements ArticleService {
             article.setContent(articleDto.getContent());
             article.setUpdateTime(new Date(System.currentTimeMillis()));
 
+            if (article.getSeriesId() != null | !Objects.equals(article.getSeriesId(), "")) {
+                article.setSeriesId(articleDto.getSeriesId());
+            }
             article = articleRepository.save(article);
             return article;
         } else {
@@ -86,5 +93,24 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> getArticleByType(String type) {
         return (List<Article>) articleRepository.findByType(type);
+    }
+
+    @Override
+    public void setSeriesId(String seriesId, List<String> articleList) {
+        for (String id: articleList) {
+            if (articleRepository.findById(id).isPresent()) {
+                Article article = articleRepository.findById(id).get();
+                article.setSeriesId(seriesId);
+                articleRepository.save(article);
+            }
+        }
+    }
+
+    @Override
+    public String getTitleById(String id) {
+        if (articleRepository.findById(id).isPresent()) {
+            return articleRepository.findById(id).get().getTitle();
+        }
+        return null;
     }
 }

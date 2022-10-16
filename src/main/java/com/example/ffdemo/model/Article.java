@@ -19,6 +19,7 @@ public class Article {
     private Date updateTime;
     private String userId;
     private String type;
+    private String seriesId;
 
     public Article(String title, String content, Date createTime, Date updateTime, String userId) {
         this.title = title;
@@ -102,5 +103,13 @@ public class Article {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getSeriesId() {
+        return seriesId;
+    }
+
+    public void setSeriesId(String seriesId) {
+        this.seriesId = seriesId;
     }
 }

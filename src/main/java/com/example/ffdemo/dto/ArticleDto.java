@@ -10,11 +10,20 @@ public class ArticleDto {
     private Date createTime;
     private Date updateTime;
     private String type;
+    private String seriesId;
+
 
     public ArticleDto(String title, String content, String userId) {
         this.title = title;
         this.content = content;
         this.userId = userId;
+    }
+
+    public ArticleDto(String title, String content, String userId, String seriesId) {
+        this.title = title;
+        this.content = content;
+        this.userId = userId;
+        this.seriesId = seriesId;
     }
 
     public ArticleDto(String title, String content, String userId, Date createTime, Date updateTime) {
@@ -74,5 +83,13 @@ public class ArticleDto {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getSeriesId() {
+        return seriesId;
+    }
+
+    public void setSeriesId(String seriesId) {
+        this.seriesId = seriesId;
     }
 }

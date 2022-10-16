@@ -14,13 +14,14 @@
 <div class="container-fluid container">
     <h1 th:text="'Welcome Back! ' + ${username}" class="text-center"></h1>
     <div class="row g-5">
+
         <div class="col-md-7 col-lg-6">
             <!--Announcement-->
             <h3 class="text-center">Announcements</h3>
-            <div class="list-group">
+            <div class="list-group mb-3">
                 <a href="#" class="list-group-item list-group-item-action" aria-current="true"
                    th:each="announcement: ${announcements}"
-                th:href="@{/announcement/{id}(id=${announcement.getId()})}">
+                   th:href="@{/announcement/{id}(id=${announcement.getId()})}">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1" th:text="${announcement.getTitle()}"></h5>
                         <small th:text="${announcement.getCreateTime()}" class="text-muted"></small>
@@ -28,7 +29,11 @@
                     <p class="mb-1 text-truncate" th:text="${announcement.getContent()}"></p>
                 </a>
             </div>
+            <p class="text-end">
+                <a href="/" th:href="@{/announcement/}">Read More >>></a>
+            </p>
         </div>
+
         <div class="col-md-5 col-lg-6 text-center" th:if="${username != ''}">
             <!--Works-->
             <h3 class="">Manage Your Works</h3>

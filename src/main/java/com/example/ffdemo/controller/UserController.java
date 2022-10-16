@@ -1,18 +1,21 @@
 package com.example.ffdemo.controller;
 
 import com.example.ffdemo.dto.UserDto;
+import com.example.ffdemo.model.Article;
+import com.example.ffdemo.model.Series;
 import com.example.ffdemo.model.User;
+import com.example.ffdemo.repository.SeriesRepository;
+import com.example.ffdemo.service.ArticleService;
+import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -20,10 +23,16 @@ import java.util.Objects;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private SeriesService seriesService;
+    @Autowired
+    private ArticleService articleService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, SeriesService seriesService, ArticleService articleService) {
         super();
         this.userService = userService;
+        this.articleService = articleService;
+        this.seriesService = seriesService;
     }
 
     @GetMapping("/registration")
@@ -82,5 +91,17 @@ public class UserController {
         request.getSession().setAttribute("userId", "");
         request.getSession().setAttribute("username", "");
         return "redirect:/";
+    }
+
+    @GetMapping("/user/{id}")
+    public String userPage(Model model, @PathVariable String id) {
+        User user = userService.getUserById(id);
+        List<Series> seriesList = (List<Series>) seriesService.getSeriesByUserId(id);
+        List<Article> articleList = articleService.getArticleByUserId(id);
+
+        model.addAttribute("user", user);
+        model.addAttribute("seriesList", seriesList);
+        model.addAttribute("articleList", articleList);
+        return "user";
     }
 }

@@ -7,5 +7,6 @@ public interface UserService {
     User saveUser(UserDto userDto);
     User getUserByEmail(String email);
     String getUsernameById(String userId);
+    User getUserById(String id);
 
 }

@@ -10,19 +10,18 @@
 <nav th:insert="fragments/header.html :: navibar"></nav>
 
 <div class="container text-center">
-    <h2 th:text="${username}"></h2>
-    <h3>Articles</h3>
-    <table class="table table-hover">
+    <h2 th:text="'Articles by '+${username}"></h2>
+    <table class="table table-hover align-middle">
         <thead>
         <tr>
             <th scope="col">Title</th>
-            <th scope="col">Operation</th>
+            <th scope="col" th:if="${username} == ${session.username}">Operation</th>
         </tr>
         </thead>
         <tbody th:each="article : ${articles}">
         <tr>
             <td th:text="${article.getTitle()}"></td>
-            <td>
+            <td th:if="${username} == ${session.username}">
                 <div class="d-grid gap-2 d-md-block">
                     <a href="/" th:href="@{/article/{id}(id=${article.getId()})}"
                        class="btn btn-sm btn-primary">Detail</a>
@@ -34,8 +33,6 @@
         </tr>
         </tbody>
     </table>
-
-    <h3>Series</h3>
 </div>
 </body>
 </html>

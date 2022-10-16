@@ -6,7 +6,7 @@
 </head>
 <body>
 <!--Navigate Bar-->
-<nav class="p-3 text-bg-dark" style="user-select: auto;" th:fragment="navibar">
+<nav class="p-3 navbar-dark bg-dark" style="user-select: auto;" th:fragment="navibar">
     <div class="container" style="user-select: auto;">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start"
              style="user-select: auto;">
@@ -22,6 +22,12 @@
                 style="user-select: auto;">
                 <li style="user-select: auto;"><a th:href="@{/}" class="nav-link px-2 text-white"
                                                   style="user-select: auto;">Home</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-secondary" th:href="@{/series/search?page=0}">Series</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-secondary" th:href="@{/article/search?page=0}">Articles</a>
+                </li>
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" style="user-select: auto;"

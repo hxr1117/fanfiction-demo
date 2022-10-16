@@ -4,6 +4,7 @@ import com.example.ffdemo.dto.SeriesDto;
 import com.example.ffdemo.model.Series;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface SeriesService {
@@ -16,4 +17,6 @@ public interface SeriesService {
     Collection<Series> getSeriesByUserId(String userId);
 
     Optional<Series> getSeriesById(String id);
+    void deleteById(String id);
+    List<Series> getAllSeries(String title, int page);
 }

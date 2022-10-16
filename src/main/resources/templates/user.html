@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${user.getUsername()}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
+<body>
+<nav th:insert="fragments/header.html :: navibar"></nav>
+
+<div class="container">
+    <h1 th:text="'Works by '+${user.getUsername()}"></h1>
+    <hr>
+
+    <h2 class="text-center">Articles</h2>
+    <div class="card mb-3 bg-light" th:each="article : ${articleList}">
+        <div class="card-body">
+            <div class="d-flex card-title justify-content-between align-items-center">
+                <h5 class="" th:text="${article.getTitle()}"></h5>
+                <p class="text-muted text-end" th:text="${#dates.format(article.getUpdateTime(), 'yyyy-MM-dd')}"></p>
+            </div>
+            <p class="card-text text-truncate" th:text="${article.getContent()}"></p>
+            <div class="text-end">
+                <a href="#" class="btn btn-primary" th:href="@{/article/{id}(id=${article.getId()})}">Read More</a>
+            </div>
+        </div>
+    </div>
+    <div class="text-end">
+        <a th:href="@{/article/user/{id}(id=${user.getId()})}" class="text-end">All Articles >>></a>
+    </div>
+
+    <hr>
+    <h2 class="text-center">Series</h2>
+    <div class="card mb-3 bg-light" th:each="series : ${seriesList}">
+        <div class="card-body">
+            <div class="d-flex card-title justify-content-between align-items-center">
+                <h5 class="card-title" th:text="${series.getName()}"></h5>
+                <p class="text-muted text-end" th:text="${#dates.format(series.getUpdateTime(), 'yyyy-MM-dd')}"></p>
+            </div>
+            <div class="text-end">
+                <a href="#" class="btn btn-primary" th:href="@{/series/{id}(id=${series.getId()})}">Read More</a>
+            </div>
+        </div>
+    </div>
+    <div class="text-end">
+        <a th:href="@{/series/user/{id}(id=${user.getId()})}" class="text-end">All Series >>></a>
+
+    </div>
+</div>
+</body>
+</html>

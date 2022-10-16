@@ -10,10 +10,50 @@
 <nav th:insert="fragments/header.html :: navibar"></nav>
 
 <div class="container-sm">
+    <div class="d-flex align-items-center justify-content-end" th:if="${chapters}">
+        <div class="dropdown mt-3">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                All Chapters
+            </button>
+            <ul class="dropdown-menu">
+                <li th:each="chapter : ${chapters}">
+                    <a class="dropdown-item active" th:href="@{/article/{id}(id=${chapter.getKey()})}"
+                       th:text="${chapter.getValue()}" th:if="${chapter.getValue() == article.getTitle()}"
+                    ></a>
+                    <a class="dropdown-item" th:href="@{/article/{id}(id=${chapter.getKey()})}"
+                       th:text="${chapter.getValue()}" th:unless="${chapter.getValue() == article.getTitle()}"></a>
+
+                </li>
+            </ul>
+        </div>
+    </div>
     <h1 class="text-center" th:text="${article.getTitle()}"></h1>
-    <p class="text-muted" th:text="'Updated time: '+${#dates.format(article.getUpdateTime(), 'yyyy-MM-dd HH:mm')}"></p>
+    <div class="text-muted text-center">
+        <hr>
+        <div>
+            <a href="/" th:href="@{/user/{id}(id=${article.getUserId()})}" th:text="'Author: ' + ${username}"></a>
+        </div>
+        <div class="d-flex justify-content-evenly">
+            <div>
+                Created Time: [[${#dates.format(article.getUpdateTime(), 'yyyy-MM-dd HH:mm')}]]
+            </div>
+            <div>
+                Updated Time: [[${#dates.format(article.getUpdateTime(), 'yyyy-MM-dd HH:mm')}]]
+            </div>
+        </div>
+
+    </div>
+    <hr>
     <div th:utext="${article.getContent()}">
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
+        integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk"
+        crossorigin="anonymous"></script>
 </body>
 </html>

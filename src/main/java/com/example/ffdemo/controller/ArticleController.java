@@ -2,7 +2,10 @@ package com.example.ffdemo.controller;
 
 import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
+import com.example.ffdemo.model.Series;
+import com.example.ffdemo.model.User;
 import com.example.ffdemo.service.ArticleService;
+import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,22 +14,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
     @Autowired
     private ArticleService articleService;
-
+    @Autowired
+    private SeriesService seriesService;
     @Autowired
     private UserService userService;
 
-    public ArticleController(ArticleService articleService, UserService userService) {
+    public ArticleController(ArticleService articleService, UserService userService, SeriesService seriesService) {
         this.articleService = articleService;
         this.userService = userService;
+        this.seriesService = seriesService;
     }
 
     public ArticleController(ArticleService articleService) {
@@ -71,7 +74,21 @@ public class ArticleController {
     public String getArticle(@PathVariable String id, Model model, HttpSession session) {
         if (articleService.getArticleById(id).isPresent()) {
             Article article = articleService.getArticleById(id).get();
+            String username = userService.getUsernameById(article.getUserId());
 
+            if (article.getSeriesId() != null && seriesService.getSeriesById(article.getSeriesId()).isPresent()) {
+                Series series = seriesService.getSeriesById(article.getSeriesId()).get();
+                model.addAttribute("series", series);
+                Map<String, String> chapters = new HashMap<>();
+                for (String articleId: series.getArticleList()) {
+                    if (articleService.getTitleById(id) != null) {
+                        chapters.put(articleId, articleService.getTitleById(articleId));
+                    }
+                }
+                model.addAttribute("chapters", chapters);
+            }
+
+            model.addAttribute("username", username);
             model.addAttribute("article", article);
             return "article";
         } else {
@@ -80,8 +97,12 @@ public class ArticleController {
     }
 
     @GetMapping("/search")
-    public String searchArticles(Model model, @RequestParam(value = "title", required = true) String title) {
-        List<Article> articles = articleService.getArticleByTitle(title);
+    public String searchArticles(Model model, @RequestParam(value = "title", required = false) String title,
+                                 @RequestParam(value = "page", required = false) Integer page) {
+        title = title != null ? title : "";
+        page = page == null ? 0 : page;
+
+        List<Article> articles = articleService.getArticleByTitle(title, page);
 
         model.addAttribute("type", "search");
         model.addAttribute("search", title);

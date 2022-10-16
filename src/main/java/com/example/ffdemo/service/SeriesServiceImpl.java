@@ -4,9 +4,12 @@ import com.example.ffdemo.dto.SeriesDto;
 import com.example.ffdemo.model.Series;
 import com.example.ffdemo.repository.SeriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -60,5 +63,14 @@ public class SeriesServiceImpl implements SeriesService {
         return repository.findById(id);
     }
 
+    @Override
+    public void deleteById(String id) {
+        repository.deleteById(id);
+    }
 
+    @Override
+    public List<Series> getAllSeries(String title, int page) {
+        Pageable pageable = PageRequest.of(0, 10);
+        return repository.getAllByNameContainsIgnoreCase(title, pageable);
+    }
 }

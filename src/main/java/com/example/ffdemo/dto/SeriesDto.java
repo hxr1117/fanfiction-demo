@@ -1,6 +1,7 @@
 package com.example.ffdemo.dto;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class SeriesDto {
@@ -8,6 +9,8 @@ public class SeriesDto {
     public String name;
     public String userId;
     public List<String> articleList;  // article id
+    public Date createTime;
+    public Date updateTime;
 
     public SeriesDto(String name, String userId) {
         this.name = name;
@@ -18,6 +21,8 @@ public class SeriesDto {
         this.name = name;
         this.userId = userId;
         this.articleList = articleList;
+        this.createTime = new Date(System.currentTimeMillis());
+        this.updateTime = new Date(System.currentTimeMillis());
     }
 
     public SeriesDto() {
@@ -37,6 +42,7 @@ public class SeriesDto {
 
     public void setName(String name) {
         this.name = name;
+        this.updateTime = new Date(System.currentTimeMillis());
     }
 
     public String getUserId() {
@@ -45,6 +51,7 @@ public class SeriesDto {
 
     public void setUserId(String userId) {
         this.userId = userId;
+        this.updateTime = new Date(System.currentTimeMillis());
     }
 
     public Collection<String> getArticleList() {
@@ -53,5 +60,6 @@ public class SeriesDto {
 
     public void setArticleList(List<String> articleList) {
         this.articleList = articleList;
+        this.updateTime = new Date(System.currentTimeMillis());
     }
 }
