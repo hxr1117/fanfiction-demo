@@ -1,14 +1,13 @@
 package com.example.ffdemo.controller;
 
-import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.dto.SeriesDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.model.Series;
-import com.example.ffdemo.model.User;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -156,8 +155,13 @@ public class SeriesController {
         title = title != null ? title : "";
         page = page == null ? 0 : page;
 
-        List<Series> seriesList = seriesService.getAllSeries(title, page);
-        model.addAttribute("seriesList", seriesList);
+
+        Page<Series> seriesList = seriesService.getAllSeries(title, page);
+
+        model.addAttribute("url", "/series/search");
+        model.addAttribute("totalPage", seriesList.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("seriesList", seriesList.toList());
         model.addAttribute("search", title);
         return "seriesList";
     }

@@ -1,6 +1,7 @@
 package com.example.ffdemo.repository;
 
 import com.example.ffdemo.model.Series;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -13,6 +14,7 @@ public interface SeriesRepository extends PagingAndSortingRepository<Series, Str
     Collection<Series> getSeriesByUserId(String userId);
     Series findByName(String name);
     Optional<Series> findById(String id);
-    List<Series> getAllByIdIsNull(Pageable pageable);
-    List<Series> getAllByNameContainsIgnoreCase(String title, Pageable pageable);
+//    Page<Series> getAll(Pageable pageable);
+    Page<Series> getAllByNameContainsIgnoreCase(String title, Pageable pageable);
+
 }

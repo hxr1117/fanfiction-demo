@@ -2,6 +2,7 @@ package com.example.ffdemo.service;
 
 import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.Optional;
 public interface ArticleService {
     Article saveAnnouncement(ArticleDto articleDto);
     Article saveArticle(ArticleDto articleDto);
-    List<Article> getArticleByTitle(String title, Integer page);
+    Page<Article> getArticleByTitle(String title, Integer page);
     Optional<Article> getArticleById(String id);
     List<Article> getArticleByUserId(String userId);
 

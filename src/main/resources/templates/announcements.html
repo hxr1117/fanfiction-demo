@@ -29,6 +29,10 @@
              th:text="${#dates.format(announcement.updateTime, 'yyyy-MM-dd HH:mm')}">
         </div>
     </div>
+
+    <!-- Pagination -->
+    <nav th:insert="fragments/pagination.html :: pagination(url=${url}, title=${search}, currentPage=${currentPage}, totalPage=${totalPage})"></nav>
+
 </div>
 </body>
 </html>

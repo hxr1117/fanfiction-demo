@@ -50,6 +50,6 @@
 </div>
 
 <!--Pagination-->
-<nav th:insert="fragments/pagination.html :: pagination"></nav>
+<nav th:insert="fragments/pagination.html :: pagination(url=${url}, title=${search}, currentPage=${currentPage}, totalPage=${totalPage})"></nav>
 </body>
 </html>

@@ -4,6 +4,7 @@ import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticleByTitle(String title, Integer page) {
+    public Page<Article> getArticleByTitle(String title, Integer page) {
         Pageable pageable = PageRequest.of(page, 10);
         return articleRepository.findByTitleRegex(title, pageable);
     }
@@ -54,7 +55,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getArticleByUserId(String userId) {
-        return (List<Article>) articleRepository.findByUserId(userId);
+        return articleRepository.findByUserId(userId);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<Article> getArticleByType(String type) {
-        return (List<Article>) articleRepository.findByType(type);
+        return articleRepository.findByType(type);
     }
 
     @Override

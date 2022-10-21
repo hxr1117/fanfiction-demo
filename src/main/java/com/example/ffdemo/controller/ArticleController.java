@@ -3,17 +3,16 @@ package com.example.ffdemo.controller;
 import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.model.Series;
-import com.example.ffdemo.model.User;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -102,11 +101,14 @@ public class ArticleController {
         title = title != null ? title : "";
         page = page == null ? 0 : page;
 
-        List<Article> articles = articleService.getArticleByTitle(title, page);
+        Page<Article> articles = articleService.getArticleByTitle(title, page);
 
+        model.addAttribute("url", "/article/search");
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPage", articles.getTotalPages());
         model.addAttribute("type", "search");
         model.addAttribute("search", title);
-        model.addAttribute("announcements", articles);
+        model.addAttribute("announcements", articles.toList());
         return "announcements";
     }
 
