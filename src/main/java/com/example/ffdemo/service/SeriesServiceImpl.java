@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -71,7 +72,7 @@ public class SeriesServiceImpl implements SeriesService {
 
     @Override
     public Page<Series> getAllSeries(String title, int page) {
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("updateTime").descending());
         return repository.getAllByNameContainsIgnoreCase(title, pageable);
     }
 }

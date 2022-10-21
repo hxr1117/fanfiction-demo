@@ -3,7 +3,6 @@ package com.example.ffdemo.service;
 import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;

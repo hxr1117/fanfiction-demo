@@ -18,15 +18,14 @@
 
     <div class="card text-center mb-3" th:each="announcement : ${announcements}">
         <div class="card-body">
-            <h5 class="card-title" th:text="${announcement.getTitle()}"></h5>
+            <div class="d-flex card-title justify-content-between align-items-center">
+                <h5 class="" th:text="${announcement.getTitle()}"></h5>
+                <p class="text-muted text-end" th:text="${#dates.format(announcement.getUpdateTime(), 'yyyy-MM-dd')}"></p>
+            </div>
             <p class="card-text text-truncate" th:text="${announcement.getContent()}"></p>
-            <a href="#" class="btn btn-primary" th:href="@{/announcement/{id}(id=${announcement.getId()})}"
-               th:if="${type} == 'announcement'">Details</a>
-            <a href="#" class="btn btn-primary" th:href="@{/article/{id}(id=${announcement.getId()})}"
-               th:if="${type} == 'search'">Read More</a>
-        </div>
-        <div class="card-footer text-muted"
-             th:text="${#dates.format(announcement.updateTime, 'yyyy-MM-dd HH:mm')}">
+            <div class="text-end">
+                <a href="#" class="btn btn-primary" th:href="@{/article/{id}(id=${announcement.getId()})}">Read More</a>
+            </div>
         </div>
     </div>
 

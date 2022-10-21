@@ -159,7 +159,7 @@ public class SeriesController {
         Page<Series> seriesList = seriesService.getAllSeries(title, page);
 
         model.addAttribute("url", "/series/search");
-        model.addAttribute("totalPage", seriesList.getTotalPages());
+        model.addAttribute("totalPage", seriesList.getTotalPages()-1);
         model.addAttribute("currentPage", page);
         model.addAttribute("seriesList", seriesList.toList());
         model.addAttribute("search", title);

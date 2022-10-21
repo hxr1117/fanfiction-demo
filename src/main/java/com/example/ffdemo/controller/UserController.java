@@ -8,6 +8,7 @@ import com.example.ffdemo.repository.SeriesRepository;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
@@ -99,6 +100,9 @@ public class UserController {
         List<Series> seriesList = (List<Series>) seriesService.getSeriesByUserId(id);
         List<Article> articleList = articleService.getArticleByUserId(id);
 
+        for (Article article : articleList) {
+            article.setContent(Jsoup.parse(article.getContent()).text());
+        }
         model.addAttribute("user", user);
         model.addAttribute("seriesList", seriesList);
         model.addAttribute("articleList", articleList);

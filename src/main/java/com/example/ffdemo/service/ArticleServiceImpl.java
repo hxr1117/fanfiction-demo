@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -44,7 +45,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Page<Article> getArticleByTitle(String title, Integer page) {
-        Pageable pageable = PageRequest.of(page, 10);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("updateTime").descending());
         return articleRepository.findByTitleRegex(title, pageable);
     }
 
@@ -98,7 +99,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void setSeriesId(String seriesId, List<String> articleList) {
-        for (String id: articleList) {
+        for (String id : articleList) {
             if (articleRepository.findById(id).isPresent()) {
                 Article article = articleRepository.findById(id).get();
                 article.setSeriesId(seriesId);

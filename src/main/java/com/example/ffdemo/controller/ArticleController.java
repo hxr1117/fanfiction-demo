@@ -6,6 +6,7 @@ import com.example.ffdemo.model.Series;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -102,10 +103,14 @@ public class ArticleController {
         page = page == null ? 0 : page;
 
         Page<Article> articles = articleService.getArticleByTitle(title, page);
+        List<Article> articleList = articles.toList();
+        for (Article article:articleList) {
+            article.setContent(Jsoup.parse(article.getContent()).text());
+        }
 
         model.addAttribute("url", "/article/search");
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPage", articles.getTotalPages());
+        model.addAttribute("totalPage", articles.getTotalPages()-1);
         model.addAttribute("type", "search");
         model.addAttribute("search", title);
         model.addAttribute("announcements", articles.toList());

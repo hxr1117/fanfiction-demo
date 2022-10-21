@@ -4,6 +4,7 @@ import com.example.ffdemo.model.Article;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -40,13 +41,16 @@ public class MainController {
         if (userId != null & !Objects.equals(userId, "")) {
             String username = userService.getUsernameById(userId);
             model.addAttribute("username", username);
-        }
-        else {
+        } else {
             model.addAttribute("username", "");
         }
+
         List<Article> announcements = articleService.getArticleByType("ANNOUNCEMENT");
         if (announcements.size() > 10) {
             announcements = announcements.subList(0, 10);
+        }
+        for (Article announcement : announcements) {
+            announcement.setContent(Jsoup.parse(announcement.getContent()).text());
         }
 
         model.addAttribute("announcements", announcements);

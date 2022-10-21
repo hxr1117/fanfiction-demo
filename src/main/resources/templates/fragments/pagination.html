@@ -8,18 +8,20 @@
 <nav aria-label="Page navigation" th:fragment="pagination(url, title, currentPage, totalPage)">
     <ul class="pagination justify-content-center">
         <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous" th:classappend="${currentPage}>0?'page-link':'page-link disabled'">
+            <a class="page-link" href="#" aria-label="Previous"
+               th:classappend="${currentPage}>0?'page-link':'page-link disabled'">
                 <span aria-hidden="true">&laquo;</span>
             </a>
         </li>
-        <li class="page-item"><a class="page-link" th:href="@{${url}(title=${title}, page=${currentPage}-1)}"
-                                 th:text="${currentPage}" th:if="${currentPage > 0}">1</a></li>
-        <li class="page-item"><a class="page-link active" th:href="@{${url}(title=${title}, page=${currentPage})}"
-                                 th:text="${currentPage}+1">2</a></li>
-        <li class="page-item"><a class="page-link" th:href="@{${url}(title=${title}, page=${currentPage}+1)}"
-                                 th:text="${currentPage}+2" th:if="${currentPage+1>totalPage}">3</a></li>
+        <li class="page-item" th:each="i: ${#numbers.sequence(0, totalPage)}">
+            <a class="page-link" th:href="@{${url}(title=${title}, page=${i})}"
+               th:text="${i}+1"
+               th:classappend="${i == currentPage}?'page-item active':'page-item'">1</a>
+        </li>
+
         <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next" th:classappend="${currentPage}<${totalPage}-1?'page-link':'page-link disabled'">
+            <a class="page-link" th:href="@{${url}(title=${title}, page=${totalPage}-1)}" aria-label="Next"
+               th:classappend="${currentPage}<${totalPage}-1?'page-link':'page-link disabled'">
                 <span aria-hidden="true">&raquo;</span>
             </a>
         </li>
