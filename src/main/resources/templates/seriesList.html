@@ -13,6 +13,9 @@
     <h1 th:text="'Series by '+${username}" th:if="${username}"></h1>
     <h1 th:text="'You are searching series by: '+${search}" th:if="${search}"></h1>
     <a href="" class="btn btn-primary" th:href="@{/series/new}" th:if="${username}">New Series</a>
+
+    <div th:insert="fragments/searchForm :: searchForm('/series/search')"></div>
+
     <table class="table table-hover">
         <thead>
         <tr>
