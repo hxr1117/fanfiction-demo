@@ -19,6 +19,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(UserDto userDto) {
+        if (userRepository.findByEmail(userDto.getEmail()) != null) {
+            return null;
+        }
         User user = new User(userDto.getUsername(), userDto.getEmail(),
                 userDto.getPassword());
         return userRepository.save(user);

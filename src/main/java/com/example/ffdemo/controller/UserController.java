@@ -44,9 +44,12 @@ public class UserController {
 
     @PostMapping("/registration")
     public String createUser(@ModelAttribute("user") UserDto userDto) {
-        userService.saveUser(userDto);
-        System.out.println("Created a new user: " + userDto.getUsername());
-        return "redirect:/registration?success";
+        User user = userService.saveUser(userDto);
+        if (user != null) {
+            System.out.println("Created a new user: " + userDto.getUsername());
+            return "redirect:/registration?success";
+        }
+        return "redirect:/registration?error";
     }
 
     @GetMapping("/login")
