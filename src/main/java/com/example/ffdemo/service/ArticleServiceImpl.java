@@ -93,8 +93,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticleByType(String type) {
-        return articleRepository.findByType(type);
+    public Page<Article> getArticleByType(String type, Integer page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("updateTime").descending());
+        return articleRepository.findByType(type, pageable);
     }
 
     @Override

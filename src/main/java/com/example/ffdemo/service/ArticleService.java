@@ -18,7 +18,7 @@ public interface ArticleService {
 
     Article saveEdit(ArticleDto articleDto, String id);
     void setType(String id, String type);
-    List<Article> getArticleByType(String type);
+    Page<Article> getArticleByType(String type, Integer page);
     void setSeriesId(String seriesId, List<String> articleId);
     String getTitleById(String id);
 }

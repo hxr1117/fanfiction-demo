@@ -36,16 +36,20 @@
                        aria-label="Search" style="user-select: auto;" th:name="title">
             </form>
 
-            <div class="text-end" style="user-select: auto;" th:if="${session.username == '' || session.username == null }">
+            <div class="text-end" style="user-select: auto;"
+                 th:if="${#httpServletRequest.remoteUser == '' || #httpServletRequest.remoteUser == null }">
                 <a type="button" class="btn btn-outline-light me-2" style="user-select: auto;"
                    th:href="@{/login}">Login</a>
                 <a type="button" class="btn btn-warning" style="user-select: auto;"
                    th:href="@{/registration}">Sign-up</a>
             </div>
 
-            <div class="text-end" style="user-select: auto;" th:unless="${session.username == '' || session.username == null }">
+            <div class="text-end" style="user-select: auto;"
+                 th:unless="${#httpServletRequest.remoteUser == '' || #httpServletRequest.remoteUser == null }">
                 <!--                <button class="btn btn-outline-light" type="button" data-bs-toggle="dropdown"-->
                 <!--                        aria-expanded="false" th:text="${username}"></button>-->
+                <a type="button" class="btn btn-outline-light me-2" style="user-select: auto;"
+                   th:href="@{/user/{id}(id=${#httpServletRequest.remoteUser})}">[[${session.username}]]</a>
                 <a href="/" th:href="@{/logout}" class="btn btn-warning" type="button">Logout</a>
             </div>
         </div>

@@ -3,6 +3,7 @@ package com.example.ffdemo.controller;
 import com.example.ffdemo.dto.ArticleDto;
 import com.example.ffdemo.model.Article;
 import com.example.ffdemo.service.ArticleService;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -41,7 +42,6 @@ public class AnnouncementController {
         articleDto.setUpdateTime(new Date(System.currentTimeMillis()));
         articleService.saveAnnouncement(articleDto);
 
-        // Todo: redirect to list page
         return "redirect:/announcement/";
     }
 
@@ -63,11 +63,19 @@ public class AnnouncementController {
     }
 
     @GetMapping("/")
-    public String listPage(Model model) {
-        List<Article> articleList = articleService.getArticleByType("ANNOUNCEMENT");
+    public String listPage(Model model, @RequestParam(value = "page", required = false) Integer page) {
+        page = page == null ? 0 : page;
 
+        Page<Article> announcement = articleService.getArticleByType("ANNOUNCEMENT", page);
+        List<Article> announcementList = announcement.toList();
+        for (Article article:announcementList) {
+            article.setContent(Jsoup.parse(article.getContent()).text());
+        }
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPage", announcement.getTotalPages()-1);
         model.addAttribute("type", "announcement");
-        model.addAttribute("announcements", articleList);
+        model.addAttribute("announcements", announcementList);
 
         return "announcements";
     }

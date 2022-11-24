@@ -11,6 +11,7 @@ import com.example.ffdemo.service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,8 @@ public class UserController {
 
     @PostMapping("/registration")
     public String createUser(@ModelAttribute("user") UserDto userDto) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
         User user = userService.saveUser(userDto);
         if (user != null) {
             System.out.println("Created a new user: " + userDto.getUsername());
@@ -61,8 +64,8 @@ public class UserController {
     @PostMapping("/login")
     public String checkPassword(@ModelAttribute("user") UserDto userDto, HttpServletRequest request) {
         User user = userService.getUserByEmail(userDto.getEmail());
-
-        if (Objects.equals(user.getPassword(), userDto.getPassword())) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (encoder.matches(userDto.getPassword(), user.getPassword())) {
             request.getSession().setAttribute("userId", user.getId());
             request.getSession().setAttribute("username", user.getUsername());
 

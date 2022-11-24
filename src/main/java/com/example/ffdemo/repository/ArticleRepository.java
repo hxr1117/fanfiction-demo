@@ -16,7 +16,7 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, S
     public List<Article> findByTitleContaining(String title);
     public Optional<Article> findById(String id);
 
-    List<Article> findByType(String type);
+    Page<Article> findByType(String type, Pageable pageable);
     @Query(value = "{'title': {$regex : ?0, $options: 'i'}}")
     Page<Article> findByTitleRegex(String title, Pageable pageable);
 }

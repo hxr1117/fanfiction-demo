@@ -1,12 +1,13 @@
 package com.example.ffdemo.controller;
 
 import com.example.ffdemo.model.Article;
+import com.example.ffdemo.model.User;
 import com.example.ffdemo.service.ArticleService;
 import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,17 +36,15 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String main(Model model, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-
-        if (userId != null & !Objects.equals(userId, "")) {
-            String username = userService.getUsernameById(userId);
-            model.addAttribute("username", username);
-        } else {
-            model.addAttribute("username", "");
+    public String main(Model model, HttpSession session, Authentication authentication) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            String userId = authentication.getName();
+            User user = userService.getUserById(userId);
+            session.setAttribute("username", user.getUsername());
+            session.setAttribute("userId", userId);
         }
 
-        List<Article> announcements = articleService.getArticleByType("ANNOUNCEMENT");
+        List<Article> announcements = articleService.getArticleByType("ANNOUNCEMENT", 0).toList();
         if (announcements.size() > 10) {
             announcements = announcements.subList(0, 10);
         }
@@ -54,7 +53,6 @@ public class MainController {
         }
 
         model.addAttribute("announcements", announcements);
-        model.addAttribute("userId", userId);
         return "main";
     }
 

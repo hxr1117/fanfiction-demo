@@ -12,7 +12,8 @@
 
 <!--Main Page-->
 <div class="container-fluid container">
-    <h1 th:text="'Welcome Back! ' + ${username}" class="text-center"></h1>
+    <h1 th:text="'Welcome Back! ' + ${session.username}" class="text-center"
+    th:if="${session.username != ''}"></h1>
     <div class="row g-5">
 
         <div class="col-md-7 col-lg-6">
@@ -34,7 +35,7 @@
             </p>
         </div>
 
-        <div class="col-md-5 col-lg-6 text-center" th:if="${username != ''}">
+        <div class="col-md-5 col-lg-6 text-center" th:if="${#httpServletRequest.remoteUser != ''}">
             <!--Works-->
             <h3 class="">Manage Your Works</h3>
             <div class="list-group">
@@ -42,11 +43,11 @@
                     Post an Article
                 </a>
 
-                <a class="list-group-item list-group-item-action" th:href="@{/article/user/{id}(id=${userId})}">
+                <a class="list-group-item list-group-item-action" th:href="@{/article/user/{id}(id=${session.userId})}">
                     Article Management
                 </a>
 
-                <a class="list-group-item list-group-item-action" th:href="@{/series/user/{id}(id=${userId})}">
+                <a class="list-group-item list-group-item-action" th:href="@{/series/user/{id}(id=${session.userId})}">
                     Series Management
                 </a>
             </div>
