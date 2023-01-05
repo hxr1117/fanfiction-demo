@@ -10,7 +10,10 @@ import com.example.ffdemo.service.SeriesService;
 import com.example.ffdemo.service.UserService;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,7 +106,7 @@ public class UserController {
     @GetMapping("/user/{id}")
     public String userPage(Model model, @PathVariable String id) {
         User user = userService.getUserById(id);
-        List<Series> seriesList = (List<Series>) seriesService.getSeriesByUserId(id);
+        List<Series> seriesList = seriesService.getSeriesByUserId(id, 0).toList();
         List<Article> articleList = articleService.getArticleByUserId(id);
 
         for (Article article : articleList) {
@@ -113,5 +116,37 @@ public class UserController {
         model.addAttribute("seriesList", seriesList);
         model.addAttribute("articleList", articleList);
         return "user";
+    }
+
+    @GetMapping("/user/edit/{id}")
+    public String userEditPage(Model model, @PathVariable String id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserById(id);
+        if (!Objects.equals(user.getId(), auth.getName())) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("user", user);
+        return "userEdit";
+    }
+
+    @PostMapping("/user/edit/{id}")
+    public String userEditProfile(Model model, @PathVariable String id, @ModelAttribute("user") UserDto userDto) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserById(id);
+        if (Objects.equals(user.getId(), auth.getName())) {
+            if (!Objects.equals(userDto.getEmail(), user.getEmail())) {
+                if (userService.getUserByEmail(userDto.getEmail()) != null) {
+                    return "redirect:/user/edit/" + id + "?error";
+                }
+            }
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            userDto.setPassword(encoder.encode(userDto.getPassword()));
+            userService.saveUser(userDto);
+        } else {
+            return "redirect:/";
+        }
+
+        return "redirect:/user/edit/"+id+"?success";
     }
 }

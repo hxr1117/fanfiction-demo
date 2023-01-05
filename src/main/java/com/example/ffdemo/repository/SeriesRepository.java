@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SeriesRepository extends PagingAndSortingRepository<Series, String> {
-    Collection<Series> getSeriesByUserId(String userId);
+    Page<Series> getSeriesByUserId(String userId, Pageable pageable);
     Series findByName(String name);
     Optional<Series> findById(String id);
 //    Page<Series> getAll(Pageable pageable);

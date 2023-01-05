@@ -21,3 +21,5 @@ Spring Boot + Thymeleaf + MongoDB + Docker
    2. Modify announcements
    3. Delete announcements
 5. Pagination
+6. Spring Security
+   1. Intercepts some requests from unlogged users.

@@ -24,7 +24,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     protected void configure(HttpSecurity http) throws Exception {
-//        System.out.println("1");
         http
                 .csrf().disable()
                 .authorizeRequests().antMatchers("/", "/registration**")
@@ -33,15 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().usernameParameter("email").passwordParameter("password").loginPage("/login")
                 .permitAll()
                 .and()
-                .logout().invalidateHttpSession(true)
+                .logout().logoutSuccessUrl("/").invalidateHttpSession(true)
                 .clearAuthentication(true).permitAll();
         http.rememberMe().rememberMeParameter("remember-me");
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        System.out.println("2");
-
         auth.userDetailsService(userDetailsService);
         auth.parentAuthenticationManager(authenticationManagerBean());
     }

@@ -10,8 +10,10 @@
 <nav th:insert="fragments/header.html :: navibar"></nav>
 
 <div class="container-sm">
-    <div class="d-flex align-items-center justify-content-end" th:if="${chapters}">
-        <div class="dropdown mt-3">
+    <div class="d-flex flex-wrap align-items-center justify-content-end" th:if="${chapters}">
+        <a th:href="@{/article/edit/{id}(id=${article.getId()})}" class="btn btn-warning m-3"
+           th:if="${#httpServletRequest.remoteUser == article.getUserId()}">Edit</a>
+        <div class="dropdown">
             <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
                 All Chapters

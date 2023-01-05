@@ -3,6 +3,7 @@ package com.example.ffdemo.service;
 import com.example.ffdemo.dto.SeriesDto;
 import com.example.ffdemo.model.Series;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface SeriesService {
 
     boolean containArticle(String id, String articleId);
 
-    Collection<Series> getSeriesByUserId(String userId);
+    Page<Series> getSeriesByUserId(String userId, int page);
 
     Optional<Series> getSeriesById(String id);
     void deleteById(String id);

@@ -55,8 +55,9 @@ public class SeriesServiceImpl implements SeriesService {
     }
 
     @Override
-    public Collection<Series> getSeriesByUserId(String userId) {
-        return repository.getSeriesByUserId(userId);
+    public Page<Series> getSeriesByUserId(String userId, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("updateTime").descending());
+        return repository.getSeriesByUserId(userId, pageable);
     }
 
     @Override

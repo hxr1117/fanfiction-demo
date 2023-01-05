@@ -41,10 +41,15 @@ public class SeriesController {
     }
 
     @GetMapping("/user/{userId}")
-    public String getUserSeries(@PathVariable String userId, Model model) {
-        List<Series> seriesList = (List<Series>) seriesService.getSeriesByUserId(userId);
+    public String getUserSeries(@PathVariable String userId, Model model, @RequestParam(value = "page", required = false) Integer page) {
+        page = page == null ? 0 : page;
+
+        Page<Series> seriesList = seriesService.getSeriesByUserId(userId, page);
         String username = userService.getUsernameById(userId);
-        model.addAttribute("seriesList", seriesList);
+
+        model.addAttribute("totalPage", seriesList.getTotalPages() - 1);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("seriesList", seriesList.toList());
         model.addAttribute("username", username);
         return "seriesList";
     }
@@ -159,7 +164,7 @@ public class SeriesController {
         Page<Series> seriesList = seriesService.getAllSeries(title, page);
 
         model.addAttribute("url", "/series/search");
-        model.addAttribute("totalPage", seriesList.getTotalPages()-1);
+        model.addAttribute("totalPage", seriesList.getTotalPages() - 1);
         model.addAttribute("currentPage", page);
         model.addAttribute("seriesList", seriesList.toList());
         model.addAttribute("search", title);
